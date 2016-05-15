@@ -33,7 +33,7 @@ namespace Rss2Email
 
         public override string ToString()
         {
-            return String.Format("Title: {0}, Description: {1}, Link: {2}", Title, Description, Link);
+            return String.Format("{0}\n{1}\n{2}\n", Title, Description, Link);
         }
     }
 }

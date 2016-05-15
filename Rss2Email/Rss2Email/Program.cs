@@ -11,31 +11,12 @@ namespace Rss2Email
     {
         static void Main(string[] args)
         {
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(new Uri("http://wheredidyouslee.livejournal.com/data/rss"));
 
-            HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+            RssFeed feed = new RssFeed(new Uri("http://wheredidyouslee.livejournal.com/data/rss"), TimeSpan.FromMinutes(5));
 
-            Stream responseStream = response.GetResponseStream();
+            feed.Subscribe("sanzhiev@ccfit.nsu.ru", "egorsanzhiev@gmail.com");
 
-            using (responseStream)
-            {
-                List<RssItem> items = RssParser.Parse(responseStream);
-
-                foreach (var item in items)
-                {
-                    Console.WriteLine(item);
-                }
-
-                EmailSender.Send("egorsanzhiev@gmail.com", items);
-
-//                StreamReader reader = new StreamReader(responseStream);
-//
-//                Console.WriteLine(reader.ReadToEnd());
-            }
-
-            Console.WriteLine("DONE");
-
-            Console.ReadLine();
+            feed.StartChecking();
         }
     }
 }

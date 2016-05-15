@@ -9,7 +9,9 @@ namespace Rss2Email
 {
     class EmailSender
     {
-        public static void Send(string to, List<RssItem> updates)
+        private static readonly MailAddress Sender = new MailAddress("rssforwarder@mail.ru");
+
+        public static void Send(List<MailAddress> receivers, List<RssItem> updates)
         {
             SmtpClient client = new SmtpClient() 
             {
@@ -31,11 +33,15 @@ namespace Rss2Email
 
             MailMessage message = new MailMessage()
             {
-                To = {new MailAddress(to)},
-                From = new MailAddress("rssforwarder@mail.ru"),
+                From = Sender,
                 Subject = "Rss updates",
                 Body = builder.ToString()
             };
+
+            foreach (var address in receivers)
+            {
+                message.To.Add(address);
+            }
 
             client.Send(message);
         }
