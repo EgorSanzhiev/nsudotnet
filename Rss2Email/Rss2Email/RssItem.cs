@@ -11,6 +11,7 @@ namespace Rss2Email
         public string Title { get; set; }
         public string Description { get; set; }
         public Uri Link { get; set; }
+        public DateTime PublicationDate { get; set; }
 
         public RssItem(XmlNode itemNode)
         {
@@ -26,6 +27,9 @@ namespace Rss2Email
                         break;
                     case "link":
                         Link = new Uri(childNode.InnerText);
+                        break;
+                    case "pubDate":
+                        PublicationDate = DateTime.Parse(childNode.InnerText);
                         break;
                 }
             }

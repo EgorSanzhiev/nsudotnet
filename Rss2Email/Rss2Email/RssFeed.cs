@@ -14,10 +14,6 @@ namespace Rss2Email
     {
         private Uri _source;
 
-        private string _channelTitle;
-
-        private string _channelDescription;
-
         private TimeSpan _updatePeriod;
 
         private List<MailAddress> _subscribers;
@@ -41,6 +37,7 @@ namespace Rss2Email
 
         public void StartChecking()
         {
+            DateTime lastUpdate = DateTime.MinValue;
             while (true)
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri("http://wheredidyouslee.livejournal.com/data/rss"));
@@ -57,15 +54,17 @@ namespace Rss2Email
 
                 XmlNode channelNode = rssDocument.GetElementsByTagName("channel")[0];
 
-                _channelTitle = channelNode.SelectSingleNode("title").InnerText;
-
-                _channelDescription = channelNode.SelectSingleNode("description").InnerText;
+                string channelTitle = channelNode.SelectSingleNode("title").InnerText;
 
                 List<RssItem> updates = (from XmlNode childNode in channelNode.ChildNodes 
-                                         where (childNode.Name == "item") 
-                                         select new RssItem(childNode)).ToList();
+                                         where childNode.Name == "item" 
+                                         select new RssItem(childNode) into item 
+                                         where item.PublicationDate > lastUpdate 
+                                         select item).ToList();
 
-                EmailSender.Send(_subscribers, updates);
+                lastUpdate = DateTime.Now;
+
+                EmailSender.Send(_subscribers, updates, channelTitle);
 
                 Thread.Sleep(_updatePeriod);
 

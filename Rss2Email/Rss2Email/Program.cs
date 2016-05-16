@@ -14,7 +14,7 @@ namespace Rss2Email
 
             RssFeed feed = new RssFeed(new Uri("http://wheredidyouslee.livejournal.com/data/rss"), TimeSpan.FromMinutes(5));
 
-            feed.Subscribe("sanzhiev@ccfit.nsu.ru", "egorsanzhiev@gmail.com");
+            feed.Subscribe("sanzhiev@ccfit.nsu.ru", "egorsanzhiev@mail.ru");
 
             feed.StartChecking();
         }

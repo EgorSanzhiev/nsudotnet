@@ -11,8 +11,11 @@ namespace Rss2Email
     {
         private static readonly MailAddress Sender = new MailAddress("rssforwarder@mail.ru");
 
-        public static void Send(List<MailAddress> receivers, List<RssItem> updates)
+        public static void Send(List<MailAddress> receivers,List<RssItem> updates, string channelTitle)
         {
+            if (updates.Count == 0)
+                return;
+
             SmtpClient client = new SmtpClient() 
             {
                 Port = 587, 
@@ -34,7 +37,7 @@ namespace Rss2Email
             MailMessage message = new MailMessage()
             {
                 From = Sender,
-                Subject = "Rss updates",
+                Subject = String.Format("Updates from {0}", channelTitle),
                 Body = builder.ToString()
             };
 
