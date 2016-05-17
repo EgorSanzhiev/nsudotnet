@@ -9,12 +9,17 @@ namespace Rss2Email
 {
     class Program
     {
+        //Arguments - RSS source, update period in minutes, list of e-mails
         static void Main(string[] args)
         {
+            int updatePeriod = int.Parse(args[1]);
+            RssFeed feed = new RssFeed(new Uri(args[0]), TimeSpan.FromMinutes(updatePeriod));
 
-            RssFeed feed = new RssFeed(new Uri("http://wheredidyouslee.livejournal.com/data/rss"), TimeSpan.FromMinutes(5));
+            string[] subscribers = new string[args.Length - 2];
 
-            feed.Subscribe("sanzhiev@ccfit.nsu.ru", "egorsanzhiev@mail.ru");
+            Array.Copy(args, 2, subscribers, 0, subscribers.Length);
+
+            feed.Subscribe(subscribers);
 
             feed.StartChecking();
         }

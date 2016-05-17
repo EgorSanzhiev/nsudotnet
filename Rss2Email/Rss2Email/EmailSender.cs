@@ -31,7 +31,7 @@ namespace Rss2Email
 
             foreach (var ud in updates)
             {
-                builder.Append(ud);
+                builder.Append(ud).Append("\n");
             }
 
             MailMessage message = new MailMessage()
