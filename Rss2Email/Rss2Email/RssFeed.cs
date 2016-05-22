@@ -40,7 +40,7 @@ namespace Rss2Email
             DateTime lastUpdate = DateTime.MinValue;
             while (true)
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri("http://wheredidyouslee.livejournal.com/data/rss"));
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_source);
 
                 HttpWebResponse response = (HttpWebResponse) request.GetResponse();
                 
