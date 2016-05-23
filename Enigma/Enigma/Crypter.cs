@@ -42,8 +42,6 @@ namespace Enigma
             _encriptionAlgorithm.GenerateIV();
             _encriptionAlgorithm.GenerateKey();
 
-            ICryptoTransform cryptoTransform = _encriptionAlgorithm.CreateEncryptor();
-
             using (FileStream keyFileStream = new FileStream(keyFileName, FileMode.Create))
             {
                 StreamWriter keyWriter = new StreamWriter(keyFileStream);
@@ -56,7 +54,10 @@ namespace Enigma
                 keyWriter.Close();
             }
 
-            ApplyCryptoTransform(cryptoTransform, inputFileName, outputFileName);
+            using (ICryptoTransform cryptoTransform = _encriptionAlgorithm.CreateEncryptor())
+            {
+                ApplyCryptoTransform(cryptoTransform, inputFileName, outputFileName);   
+            }
         }
 
         public void Decrypt(string inputFileName, string keyFileName, string outputFileName)
@@ -76,9 +77,10 @@ namespace Enigma
                 _encriptionAlgorithm.Key = Convert.FromBase64String(key);
             }
 
-            ICryptoTransform cryptoTransform = _encriptionAlgorithm.CreateDecryptor();
-
-            ApplyCryptoTransform(cryptoTransform, inputFileName, outputFileName);
+            using (ICryptoTransform cryptoTransform = _encriptionAlgorithm.CreateDecryptor())
+            {
+                ApplyCryptoTransform(cryptoTransform, inputFileName, outputFileName);
+            }
         }
 
         private void ApplyCryptoTransform(ICryptoTransform cryptoTransform, string inputFileName, string outputFileName)
